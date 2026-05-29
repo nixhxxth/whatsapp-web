@@ -27,7 +27,7 @@ exports.handler = async (event) => {
       process.env.TWILIO_WHATSAPP_NUMBER;
 
     const toNumber =
-      `whatsapp:${phone}`;
+      `whatsapp:+917200524344`;
 
     console.log("FROM =", fromNumber);
     console.log("TO =", toNumber);
