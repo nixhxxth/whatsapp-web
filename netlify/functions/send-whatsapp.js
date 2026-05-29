@@ -2,12 +2,21 @@ exports.handler = async (event) => {
 
   try {
 
-    const payload =
-      JSON.parse(event.body);
+    if (!event.body) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({
+          success: false,
+          error: "No payload received"
+        })
+      };
+    }
+
+    const payload = JSON.parse(event.body);
 
     console.log(
       "Received Payload:",
-      payload
+      JSON.stringify(payload, null, 2)
     );
 
     return {
