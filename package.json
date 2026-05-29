@@ -5,8 +5,5 @@
   "main": "index.js",
   "dependencies": {
     "twilio": "^5.5.3"
-  },
-  "scripts": {
-    "start": "netlify dev"
   }
 }

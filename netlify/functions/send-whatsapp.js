@@ -1,11 +1,9 @@
 const twilio = require("twilio");
 
 exports.handler = async (event) => {
-
   try {
 
     if (!event.body) {
-
       return {
         statusCode: 400,
         body: JSON.stringify({
@@ -13,25 +11,35 @@ exports.handler = async (event) => {
           error: "No payload received"
         })
       };
-
     }
 
-    const payload =
-      JSON.parse(event.body);
+    const payload = JSON.parse(event.body);
 
-    const {
-      sender,
-      subject,
-      phone
-    } = payload;
+    const phone = payload.phone;
+    const subject = payload.subject;
 
     const client = twilio(
       process.env.TWILIO_ACCOUNT_SID,
       process.env.TWILIO_AUTH_TOKEN
     );
 
-    const messageText =
+    const fromNumber =
+      process.env.TWILIO_WHATSAPP_NUMBER;
 
+    const toNumber =
+      `whatsapp:${phone}`;
+
+    console.log("FROM =", fromNumber);
+    console.log("TO =", toNumber);
+
+    const result =
+      await client.messages.create({
+
+        from: fromNumber,
+
+        to: toNumber,
+
+        body:
 `Hello,
 
 Thank you for contacting us.
@@ -42,42 +50,20 @@ Subject: ${subject}
 
 Our team will get back to you shortly.
 
-Regards`;
-
-    const result =
-      await client.messages.create({
-
-        from:
-          process.env
-          .TWILIO_WHATSAPP_NUMBER,
-
-        to:
-          `whatsapp:${phone}`,
-
-        body:
-          messageText
-
+Regards`
       });
 
     console.log(
-      "WhatsApp Sent:",
+      "Message SID:",
       result.sid
     );
 
     return {
-
       statusCode: 200,
-
       body: JSON.stringify({
-
         success: true,
-
-        sid: result.sid,
-
-        phone: phone
-
+        sid: result.sid
       })
-
     };
 
   } catch (error) {
@@ -85,19 +71,12 @@ Regards`;
     console.error(error);
 
     return {
-
       statusCode: 500,
-
       body: JSON.stringify({
-
         success: false,
-
         error: error.message
-
       })
-
     };
 
   }
-
 };
