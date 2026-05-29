@@ -4,33 +4,41 @@ exports.handler = async (event) => {
 
   try {
 
+    if (!event.body) {
+      throw new Error("No payload received");
+    }
+
     const payload = JSON.parse(event.body);
 
     const phone = payload.phone;
+    const subject = payload.subject || "Email Received";
 
     const client = twilio(
       process.env.TWILIO_ACCOUNT_SID,
       process.env.TWILIO_AUTH_TOKEN
     );
 
-    const result =
-      await client.messages.create({
+    const result = await client.messages.create({
 
-        from:
-          process.env.TWILIO_WHATSAPP_NUMBER,
+      from: "whatsapp:+14155238886",
 
-        contentSid:
-          process.env.TWILIO_CONTENT_SID,
+      to: `whatsapp:${phone}`,
 
-        contentVariables:
-          JSON.stringify({
-            1: payload.subject || "Email Received"
-          }),
+      body:
+`Hello,
 
-        to:
-          `whatsapp:${phone}`
+Thank you for contacting us.
 
-      });
+We have received your email.
+
+Subject: ${subject}
+
+Our team will contact you shortly.
+
+Regards`
+    });
+
+    console.log("Message SID:", result.sid);
 
     return {
       statusCode: 200,
@@ -41,6 +49,8 @@ exports.handler = async (event) => {
     };
 
   } catch (error) {
+
+    console.error(error);
 
     return {
       statusCode: 500,
