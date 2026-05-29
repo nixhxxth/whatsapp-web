@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Gmail to WhatsApp Automation",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "twilio": "^5.5.3"
+  },
   "scripts": {
     "start": "netlify dev"
   }
